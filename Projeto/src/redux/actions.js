@@ -4,3 +4,9 @@ export function logaUsuario(dados){
         dados
       }
   }
+
+  export function deslogaUsuario() {
+    return {
+          type: 'DESLOGA_USUARIO'
+        }  
+    }
