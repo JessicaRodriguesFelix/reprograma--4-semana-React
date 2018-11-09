@@ -24,10 +24,12 @@ function usuario(state = usuarioInicial, action) {
   }
 }
 
-function postits(postitsAtuais = [], action) {
+function postits(state = [], action) {
   switch(action.type) {
-    default:
-      return postitsAtuais
+    case 'CADASTRA_POSTIT':
+      return state.concat(action.dados)
+      default:
+      return state
   }
 }
 
