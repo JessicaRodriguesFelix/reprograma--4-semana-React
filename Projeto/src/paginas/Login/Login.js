@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logaUsuario } from '../../redux/actions'
 import Link from '../../componentes/Link/Link'

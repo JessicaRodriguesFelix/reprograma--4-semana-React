@@ -1,65 +1,95 @@
-import React, {Component} from 'react'
-import { cadastraPostit } from '../../redux/actions'
+import React, { Component } from 'react'
+import { cadastraPostit, alteraPostit, removePostit } from '../../redux/actions'
 import { connect } from 'react-redux'
+import { MdDelete } from 'react-icons/md'
 import './Postit.css'
 
-class Postit extends Component{
+class Postit extends Component {
 
-      constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
+    this.state = { editando: false }
+  }
 
+  cadastraOuAlteraPostit = (event) => {
+    event.preventDefault()
+
+    const cadastrando = !this.props.id
+
+    const form = event.target
+
+
+    if (cadastrando) {
+      const dados = {
+        titulo: form.titulo.value,
+        texto: form.texto.value
       }
 
-      cadastraOuAlteraPostit = (event) => {
-        event.preventDefault()
-        
-        const form = event.target
-        const dados = {
-          id:`478f062a-1f7e-4e4f-b38a-3dbcbee4fd44${Math.random(100)}`,
-          titulo: form.titulo.value,
-          texto: form.texto.value
-        }
+      this.props.cadastraPostit(dados)
 
-       this.props.cadastraPostit(dados)
+      form.reset()
 
-       form.reset()
-
-        
+    } else {
+      const dados = {
+        id: this.props.id,
+        titulo: form.titulo.value,
+        texto: form.texto.value
       }
+      this.props.alteraPostit(dados)
 
-    render(){
-      const cadastrando = !this.props.id
-      
-      return(
-      <form className='postit' onSubmit={this.cadastraOuAlteraPostit}>
+      this.setState({ editando: false })
+    }
+  }
+
+  habilitaEdicao = () => {
+    this.setState({ editando: true })
+  }
+
+  removePostit = (event) => {
+    event.stopPropagation()
+    this.props.removePostit(this.props.id)
+  }
+
+
+  render() {
+    const cadastrando = !this.props.id
+
+    return (
+      <form className='postit' onClick={this.habilitaEdicao} onSubmit={this.cadastraOuAlteraPostit}>
+        {!cadastrando && this.state.editando && (
+          <button className='postit__botao-remover' type="button" onClick={this.removePostit}>
+            <MdDelete/>
+          </button>
+        )}
         <input
           className="postit__titulo"
           type="text"
           name="titulo"
           placeholder="Título"
           autoComplete="off"
-          defaultValue={this.props.titulo}      
+          defaultValue={this.props.titulo}
         />
 
-        <textarea 
+        <textarea
           className="postit__texto"
           name="texto"
           placeholder="Digite um texto..."
           rows={5}
-          defaultValue={this.props.texto}      
+          defaultValue={this.props.texto}
         />
 
-        <button className="postit__botao-concluir">
-          Concluído
+        {(cadastrando || this.state.editando) && (
+
+          <button className="postit__botao-concluir">
+            Concluído
         </button>
-      
+        )}
       </form>
     )
-    
   }
 }
 
 export default connect(
-  null, 
-  { cadastraPostit }
-) (Postit)
+  null,
+  { cadastraPostit, alteraPostit, removePostit }
+)(Postit)

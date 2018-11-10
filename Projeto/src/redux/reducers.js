@@ -3,12 +3,12 @@ import { combineReducers } from 'redux'
 let usuarioInicial = null
 
 const json = localStorage.getItem('usuario')
-if (json){
+if (json) {
   usuarioInicial = JSON.parse(json)
 }
 
 function usuario(state = usuarioInicial, action) {
-  switch(action.type) {
+  switch (action.type) {
     case 'LOGA_USUARIO':
       const usuarioLogado = action.dados
       const json = JSON.stringify(usuarioLogado)
@@ -25,10 +25,15 @@ function usuario(state = usuarioInicial, action) {
 }
 
 function postits(state = [], action) {
-  switch(action.type) {
+  switch (action.type) {
     case 'CADASTRA_POSTIT':
       return state.concat(action.dados)
-      default:
+    case ' ALTERA_POSTIT':
+      return state.map(postit =>
+        postit.id === action.dados.id ? action.dados : postit)
+    case 'REMOVE_POSTIT':
+        return state.filter(postit => postit.id !== action.id)
+    default:
       return state
   }
 }
